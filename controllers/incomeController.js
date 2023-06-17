@@ -29,10 +29,24 @@ const addIncome = async (req, res) => {
 };
 
 const getIncomes = async (req, res) => {
-  const incomes = await Income.find({ createdBy: req.user.userId });
-  res
-    .status(StatusCodes.OK)
-    .json({ incomes, totalIncomes: incomes.length, numOfPagesIncomes: 1 });
+  let result = Income.find({ createdBy: req.user.userId });
+
+  const page = Number(req.query.incomePage) || 1;
+  const limit = Number(req.query.incomeLimit) || 10;
+
+  const skip = (page - 1) * limit;
+
+  result = result.skip(skip).limit(limit);
+
+  const incomes = await result;
+
+  const totalIncomes = await Income.countDocuments({
+    createdBy: req.user.userId
+  });
+
+  const numOfPagesIncomes = Math.ceil(totalIncomes / limit);
+
+  res.status(StatusCodes.OK).json({ incomes, totalIncomes, numOfPagesIncomes });
 };
 
 const deleteIncome = async (req, res) => {

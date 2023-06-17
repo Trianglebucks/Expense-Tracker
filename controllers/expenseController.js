@@ -26,10 +26,25 @@ const addExpense = async (req, res) => {
 };
 
 const getExpenses = async (req, res) => {
-  const expenses = await Expense.find({ createdBy: req.user.userId });
+  let result = await Expense.find({ createdBy: req.user.userId });
+
+  const page = Number(req.query.expensePage) || 1;
+  const limit = Number(req.query.expenseLimit) || 10;
+
+  const skip = (page - 1) * limit;
+
+  result = result.skip(skip).limit(limit);
+
+  const expenses = await result;
+
+  const totalExpenses = await Expense.countDocuments({
+    createdBy: req.user.userId
+  });
+
+  const numOfPagesExpenses = Math.ceil(totalExpenses / limit);
   res
     .status(StatusCodes.OK)
-    .json({ expenses, totalExpenses: expenses.length, numOfPagesExpenses: 1 });
+    .json({ expenses, totalExpenses, numOfPagesExpenses });
 };
 
 const deleteExpense = async (req, res) => {
