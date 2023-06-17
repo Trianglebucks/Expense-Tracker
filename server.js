@@ -5,6 +5,10 @@ dotenv.config();
 import "express-async-errors";
 import morgan from "morgan";
 
+import helmet from "helmet";
+import xss from "xss-clean";
+import mongoSanitize from "express-mongo-sanitize";
+
 //db
 import connectDB from "./db/connect.js";
 
@@ -24,6 +28,9 @@ if (process.env.NODE_ENV !== "production") {
 
 //makes json data available in controllers
 app.use(express.json());
+app.use(helmet());
+app.use(xss());
+app.use(mongoSanitize());
 
 app.get("/", (req, res) => {
   res.send("Welcome");
