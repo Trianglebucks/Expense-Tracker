@@ -1,6 +1,6 @@
-import Logo from "../assets/atlas-logo-White.png";
+import Logo from "../assets/atlas-logo-white.png";
 
 const LogoWhite = () => {
-  return <img style={{ width: "150px" }} src={Logo} alt="atlas-black" />;
+  return <img style={{ width: "150px" }} src={Logo} alt="atlas-white" />;
 };
 export default LogoWhite;
