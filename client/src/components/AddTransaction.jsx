@@ -7,7 +7,7 @@ import {
   DialogActions,
   Box,
   Grid,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import { useAppContext } from "../context/AppContext";
 import AlertComponent from "./AlertComponent";
@@ -16,22 +16,22 @@ const AddTransaction = ({ transacType }) => {
   const {
     showDialog,
     hideDialog,
-    editTransacId,
+
     title,
     amount,
     date,
     typeCategory,
     incomeTypeOptions,
-    incomeType,
+
     expenseTypeOptions,
-    expenseType,
+
     description,
     displayAlert,
     showAlert,
     handleChange,
     clearValues,
-    createIncome,
-    createTransaction
+
+    createTransaction,
   } = useAppContext();
 
   let isIncome = false;
@@ -40,7 +40,7 @@ const AddTransaction = ({ transacType }) => {
     isIncome = true;
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!title || !amount || !date || !typeCategory || !description) {
@@ -56,7 +56,7 @@ const AddTransaction = ({ transacType }) => {
 
     clearValues();
   };
-  const handleTransacInput = e => {
+  const handleTransacInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     handleChange({ name, value });

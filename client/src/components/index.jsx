@@ -8,6 +8,7 @@ import AddTransaction from "./AddTransaction";
 import TransacContainer from "./TransacContainer";
 import Chart from "./Chart";
 import HistoryContainer from "./HistoryContainer";
+import PaginationComponent from "./PaginationComponent";
 
 export {
   LogoBlack,
@@ -19,5 +20,6 @@ export {
   AddTransaction,
   TransacContainer,
   Chart,
-  HistoryContainer
+  HistoryContainer,
+  PaginationComponent,
 };

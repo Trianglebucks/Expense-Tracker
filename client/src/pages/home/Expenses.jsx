@@ -5,11 +5,15 @@ import {
   Card,
   CardContent,
   Button,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
-import { AddTransaction, TransacContainer } from "../../components";
+import {
+  AddTransaction,
+  TransacContainer,
+  PaginationComponent,
+} from "../../components";
 import { useAppContext } from "../../context/AppContext";
 
 const Expenses = () => {
@@ -20,12 +24,13 @@ const Expenses = () => {
     page,
     totalExpenses,
     getTransactions,
-    totalAmount
+    totalAmount,
+    expensePage,
   } = useAppContext();
 
   useEffect(() => {
     getTransactions({ endPoint: "expense" });
-  }, []);
+  }, [expensePage]);
 
   if (isLoading) {
     return <CircularProgress />;
@@ -63,7 +68,7 @@ const Expenses = () => {
             </Card>
           </Grid>
 
-          {expenses.map(expense => {
+          {expenses.map((expense) => {
             return (
               <TransacContainer
                 key={expense._id}
@@ -72,6 +77,12 @@ const Expenses = () => {
               />
             );
           })}
+
+          <Grid item xs={12} sx={{ marginTop: "20px" }}>
+            <Grid container justifyContent="flex-end">
+              <PaginationComponent transacType={"Expense"} />
+            </Grid>
+          </Grid>
         </Grid>
       </Box>
     </Box>

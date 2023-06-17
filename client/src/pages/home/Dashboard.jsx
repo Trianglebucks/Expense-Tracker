@@ -4,8 +4,14 @@ import { Chart, HistoryContainer } from "../../components";
 import { useAppContext } from "../../context/AppContext";
 
 const Dashboard = () => {
-  const { getTransactions, totalAmount, totalBalance, transactionHistory } =
-    useAppContext();
+  const {
+    getTransactions,
+    totalAmount,
+    totalBalance,
+    transactionHistory,
+    incomePage,
+    expensePage,
+  } = useAppContext();
 
   useEffect(() => {
     getTransactions({ endPoint: "income" });
@@ -89,7 +95,7 @@ const Dashboard = () => {
             <Grid container spacing={2}>
               {/* Recent 3 transactions */}
 
-              {history.map(item => {
+              {history.map((item) => {
                 return <HistoryContainer key={item._id} {...item} />;
               })}
             </Grid>

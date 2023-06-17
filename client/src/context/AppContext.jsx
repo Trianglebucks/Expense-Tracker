@@ -1,10 +1,4 @@
-import {
-  useReducer,
-  useContext,
-  createContext,
-  useState,
-  useEffect
-} from "react";
+import { useReducer, useContext, createContext, useState } from "react";
 import reducer from "./Reducer";
 import axios from "axios";
 import {
@@ -25,7 +19,9 @@ import {
   GET_TRANSACTIONS_BEGIN,
   GET_INCOMES_SUCCESS,
   GET_EXPENSES_SUCCESS,
-  DELETE_TRANSACTION_BEGIN
+  DELETE_TRANSACTION_BEGIN,
+  CHANGE_PAGE_INCOME,
+  CHANGE_PAGE_EXPENSE,
 } from "./Actions";
 
 const token = localStorage.getItem("token");
@@ -49,7 +45,7 @@ const initialState = {
     "Investments",
     "Stocks",
     "Bank",
-    "Other"
+    "Other",
   ],
   incomeType: "Salary",
   expenseTypeOptions: [
@@ -60,7 +56,7 @@ const initialState = {
     "Housing",
     "Internet",
     "Insurance",
-    "Other"
+    "Other",
   ],
   expenseType: "Food",
   typeCategory: "",
@@ -72,7 +68,7 @@ const initialState = {
   expenses: [],
   totalExpenses: 0,
   numOfPagesExpenses: 1,
-  expensePage: 1
+  expensePage: 1,
 };
 
 const AppContext = createContext();
@@ -87,24 +83,24 @@ const AppProvider = ({ children }) => {
 
   //axios
   const authFetch = axios.create({
-    baseURL: "/api/v1"
+    baseURL: "/api/v1",
   });
   //request
   authFetch.interceptors.request.use(
-    config => {
+    (config) => {
       config.headers["Authorization"] = `Bearer ${state.token}`;
       return config;
     },
-    error => {
+    (error) => {
       return Promise.reject(error);
     }
   );
   //response
   authFetch.interceptors.response.use(
-    response => {
+    (response) => {
       return response;
     },
-    error => {
+    (error) => {
       console.log(error.response);
       if (error.response.status === 401) {
         logoutUser();
@@ -167,20 +163,20 @@ const AppProvider = ({ children }) => {
       const { user, token } = data;
       dispatch({
         type: SETUP_USER_SUCCESS,
-        payload: { user, token, alertText }
+        payload: { user, token, alertText },
       });
       //localstorage
       addUserToLocalStorage({ user, token });
     } catch (error) {
       dispatch({
         type: SETUP_USER_ERROR,
-        payload: { msg: error.response.data.msg }
+        payload: { msg: error.response.data.msg },
       });
     }
     clearAlert();
   };
 
-  const updateUser = async currentUser => {
+  const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
       const { data } = await authFetch.patch("/auth/updateUser", currentUser);
@@ -193,7 +189,7 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: UPDATE_USER_ERROR,
-        payload: { msg: error.response.data.msg }
+        payload: { msg: error.response.data.msg },
       });
     }
     clearAlert();
@@ -209,7 +205,7 @@ const AppProvider = ({ children }) => {
 
   // dynamic transaction
 
-  const createTransaction = async endPoint => {
+  const createTransaction = async (endPoint) => {
     dispatch({ type: CREATE_TRANSACTION_BEGIN });
     try {
       const { title, amount, date, typeCategory, description } = state;
@@ -218,7 +214,7 @@ const AppProvider = ({ children }) => {
         amount,
         date,
         typeCategory,
-        description
+        description,
       });
       dispatch({ type: CREATE_TRANSACTION_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
@@ -226,7 +222,7 @@ const AppProvider = ({ children }) => {
       if (error.response.status === 401) {
         dispatch({
           type: CREATE_TRANSACTION_ERROR,
-          payload: { msg: error.response.data.msg }
+          payload: { msg: error.response.data.msg },
         });
       }
     }
@@ -235,7 +231,16 @@ const AppProvider = ({ children }) => {
   };
 
   const getTransactions = async ({ endPoint }) => {
-    let url = `/${endPoint}/get-${endPoint}s`;
+    const { incomePage, expensePage } = state;
+    ("");
+    let page;
+    if (endPoint === "income") {
+      page = incomePage;
+    } else {
+      page = expensePage;
+    }
+
+    let url = `/${endPoint}/get-${endPoint}s?page=${page}`;
 
     dispatch({ type: GET_TRANSACTIONS_BEGIN });
     try {
@@ -247,8 +252,8 @@ const AppProvider = ({ children }) => {
           payload: {
             incomes,
             totalIncomes,
-            numOfPagesIncomes
-          }
+            numOfPagesIncomes,
+          },
         });
       } else if (endPoint === "expense") {
         const { data } = await authFetch(url);
@@ -258,8 +263,8 @@ const AppProvider = ({ children }) => {
           payload: {
             expenses,
             totalExpenses,
-            numOfPagesExpenses
-          }
+            numOfPagesExpenses,
+          },
         });
       }
     } catch (error) {
@@ -276,15 +281,15 @@ const AppProvider = ({ children }) => {
     } catch (error) {}
   };
 
-  const totalAmount = endPoint => {
+  const totalAmount = (endPoint) => {
     let totalAmount = 0;
     if (endPoint === "income") {
-      state.incomes.forEach(income => {
+      state.incomes.forEach((income) => {
         totalAmount += income.amount;
       });
     }
     if (endPoint === "expense") {
-      state.expenses.forEach(expense => {
+      state.expenses.forEach((expense) => {
         totalAmount += expense.amount;
       });
     }
@@ -301,6 +306,14 @@ const AppProvider = ({ children }) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     return history.slice(0, 3);
+  };
+
+  const changePageIncome = (incomePage) => {
+    dispatch({ type: CHANGE_PAGE_INCOME, payload: { incomePage } });
+  };
+
+  const changePageExpense = (expensePage) => {
+    dispatch({ type: CHANGE_PAGE_EXPENSE, payload: { expensePage } });
   };
 
   return (
@@ -324,7 +337,9 @@ const AppProvider = ({ children }) => {
         deleteTransaction,
         totalAmount,
         totalBalance,
-        transactionHistory
+        transactionHistory,
+        changePageExpense,
+        changePageIncome,
       }}
     >
       {children}

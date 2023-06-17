@@ -16,7 +16,9 @@ import {
   GET_TRANSACTIONS_BEGIN,
   GET_INCOMES_SUCCESS,
   GET_EXPENSES_SUCCESS,
-  DELETE_TRANSACTION_BEGIN
+  DELETE_TRANSACTION_BEGIN,
+  CHANGE_PAGE_INCOME,
+  CHANGE_PAGE_EXPENSE,
 } from "./Actions";
 
 import { initialState } from "./AppContext";
@@ -27,7 +29,7 @@ const Reducer = (state, action) => {
       ...state,
       showAlert: true,
       alertType: "error",
-      alertText: "Please provide all values!"
+      alertText: "Please provide all values!",
     };
   }
   if (action.type === CLEAR_ALERT) {
@@ -35,14 +37,14 @@ const Reducer = (state, action) => {
       ...state,
       showAlert: false,
       alertType: "",
-      alertText: ""
+      alertText: "",
     };
   }
 
   if (action.type === SETUP_USER_BEGIN) {
     return {
       ...state,
-      isLoading: true
+      isLoading: true,
     };
   }
   if (action.type === SETUP_USER_SUCCESS) {
@@ -53,7 +55,7 @@ const Reducer = (state, action) => {
       user: action.payload.user,
       showAlert: true,
       alertType: "success",
-      alertText: action.payload.alertText
+      alertText: action.payload.alertText,
     };
   }
   if (action.type === SETUP_USER_ERROR) {
@@ -62,14 +64,14 @@ const Reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "error",
-      alertText: action.payload.msg
+      alertText: action.payload.msg,
     };
   }
 
   if (action.type === UPDATE_USER_BEGIN) {
     return {
       ...state,
-      isLoading: true
+      isLoading: true,
     };
   }
   if (action.type === UPDATE_USER_SUCCESS) {
@@ -80,7 +82,7 @@ const Reducer = (state, action) => {
       user: action.payload.user,
       showAlert: true,
       alertType: "success",
-      alertText: "User profile updated!"
+      alertText: "User profile updated!",
     };
   }
   if (action.type === UPDATE_USER_ERROR) {
@@ -89,7 +91,7 @@ const Reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "error",
-      alertText: action.payload.msg
+      alertText: action.payload.msg,
     };
   }
 
@@ -97,13 +99,15 @@ const Reducer = (state, action) => {
     return {
       ...initialState,
       user: null,
-      token: null
+      token: null,
     };
   }
   if (action.type === HANDLE_CHANGE) {
     return {
       ...state,
-      [action.payload.name]: action.payload.value
+      incomePage: 1,
+      expensePage: 1,
+      [action.payload.name]: action.payload.value,
     };
   }
   if (action.type === CLEAR_VALUES) {
@@ -114,18 +118,18 @@ const Reducer = (state, action) => {
       typeCategory: "",
       description: "",
       expenseType: "Food",
-      incomeType: "Salary"
+      incomeType: "Salary",
     };
     return {
       ...state,
-      ...initialState
+      ...initialState,
     };
   }
 
   if (action.type === CREATE_TRANSACTION_BEGIN) {
     return {
       ...state,
-      isLoading: true
+      isLoading: true,
     };
   }
   if (action.type === CREATE_TRANSACTION_SUCCESS) {
@@ -134,7 +138,7 @@ const Reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "success",
-      alertText: "Transaction added!"
+      alertText: "Transaction added!",
     };
   }
   if (action.type === CREATE_TRANSACTION_ERROR) {
@@ -143,7 +147,7 @@ const Reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "error",
-      alertText: action.payload.msg
+      alertText: action.payload.msg,
     };
   }
   if (action.type === GET_TRANSACTIONS_BEGIN) {
@@ -155,7 +159,7 @@ const Reducer = (state, action) => {
       isLoading: false,
       incomes: action.payload.incomes,
       totalIncomes: action.payload.totalIncomes,
-      numOfPagesIncomes: action.payload.numOfPagesIncomes
+      numOfPagesIncomes: action.payload.numOfPagesIncomes,
     };
   }
   if (action.type === GET_EXPENSES_SUCCESS) {
@@ -164,13 +168,18 @@ const Reducer = (state, action) => {
       isLoading: false,
       expenses: action.payload.expenses,
       totalExpenses: action.payload.totalExpenses,
-      numOfPagesExpenses: action.payload.numOfPagesExpenses
+      numOfPagesExpenses: action.payload.numOfPagesExpenses,
     };
   }
   if (action.type === DELETE_TRANSACTION_BEGIN) {
     return { ...state, isLoading: true };
   }
-
+  if (action.type === CHANGE_PAGE_INCOME) {
+    return { ...state, incomePage: action.payload.incomePage };
+  }
+  if (action.type === CHANGE_PAGE_EXPENSE) {
+    return { ...state, expensePage: action.payload.expensePage };
+  }
   throw new Error(`no such action : ${action.type}`);
 };
 export default Reducer;

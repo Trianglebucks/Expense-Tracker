@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import {
   BadRequestError,
   NotFoundError,
-  Unauthenticated
+  Unauthenticated,
 } from "../errors/index.js";
 import checkPermissions from "../utils/checkPermissions.js";
 //add Expense controller
@@ -26,9 +26,9 @@ const addExpense = async (req, res) => {
 };
 
 const getExpenses = async (req, res) => {
-  let result = await Expense.find({ createdBy: req.user.userId });
+  let result = Expense.find({ createdBy: req.user.userId });
 
-  const page = Number(req.query.expensePage) || 1;
+  const page = Number(req.query.page) || 1;
   const limit = Number(req.query.expenseLimit) || 10;
 
   const skip = (page - 1) * limit;
@@ -38,7 +38,7 @@ const getExpenses = async (req, res) => {
   const expenses = await result;
 
   const totalExpenses = await Expense.countDocuments({
-    createdBy: req.user.userId
+    createdBy: req.user.userId,
   });
 
   const numOfPagesExpenses = Math.ceil(totalExpenses / limit);
