@@ -13,7 +13,7 @@ const Header = () => {
         <Box
           component="img"
           sx={styles.appLogo}
-          src="./src/assets/atlas-logo-white.png"
+          src="../assets/atlas-logo-white.png"
         />
         <Box sx={{ flexGrow: 1 }} />
         <Typography variant="body1" sx={{ margin: "10px" }}>
@@ -33,8 +33,8 @@ const styles = {
     borderRadius: 2,
     width: 80,
     ml: 2,
-    cursor: "pointer"
-  }
+    cursor: "pointer",
+  },
 };
 
 export default Header;
