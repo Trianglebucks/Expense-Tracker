@@ -18,7 +18,7 @@ const Landing = () => {
     <Container
       sx={{
         width: "90vw",
-        maxWidth: "1120px"
+        maxWidth: "1120px",
       }}
     >
       <Box>
@@ -27,7 +27,7 @@ const Landing = () => {
             item
             xs={12}
             sx={{
-              margin: "20px 0"
+              margin: "20px 0",
             }}
           >
             {/* Atlas Logo */}
@@ -49,9 +49,9 @@ const Landing = () => {
                 variant="p"
                 sx={{ marginBottom: "20px", display: "block" }}
               >
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Perspiciatis nesciunt, impedit quis cum cupiditate aliquid iusto
-                facilis omnis doloremque a.
+                An efficient expense tracker designed to simplify budgeting,
+                monitor spending habits, and provide clear insights into your
+                financial health.”
               </Typography>
 
               <Button href="/login" variant="contained">
